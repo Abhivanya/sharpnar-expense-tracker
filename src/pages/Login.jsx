@@ -1,18 +1,14 @@
 import React, { useRef } from "react";
-import Style from "./Signup.module.css";
-const Signup = () => {
+import Style from "./Login.module.css";
+const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
 
-  const handleSignup = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    if (passwordRef.current.value !== confirmPasswordRef.current.value) {
-      alert("Password Did not match");
-      return;
-    }
+
     fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
+      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
       {
         method: "POST",
         body: JSON.stringify({
@@ -25,25 +21,27 @@ const Signup = () => {
         },
       }
     )
+      .then((response) => {
+        return response.json();
+      })
       .then((res) => {
         if (res.error) {
           throw new Error(res.error.message);
-        } else {
-          console.log(res);
-          alert("SignUp Successfully");
-          localStorage.setItem("token", res.idToken);
         }
+
+        console.log(res);
+        alert("SignIn Successfully");
+        localStorage.setItem("token", res.idToken);
       })
       .catch((err) => {
         console.log(err);
         alert(err.message);
       });
-    e.target.reset();
   };
   return (
     <div className={Style.container}>
-      <form onSubmit={handleSignup}>
-        <h1>SignUp</h1>
+      <form onSubmit={handleLogin}>
+        <h1>Login</h1>
         <div className={Style.inputContainer}>
           <label htmlFor="email">Email</label>
           <input type="email" name="email" id="email" ref={emailRef} required />
@@ -59,21 +57,12 @@ const Signup = () => {
             ref={passwordRef}
           />
         </div>
-        <div className={Style.inputContainer}>
-          <label htmlFor="cpassword">Confirm Password</label>
-          <input
-            type="password"
-            name="cpassword"
-            id="cpassword"
-            required
-            ref={confirmPasswordRef}
-            minLength={"6"}
-          />
-        </div>
-        <button>Sign up</button>
+
+        <button>Login </button>
+        <a href="#">Forget Password ?</a>
       </form>
     </div>
   );
 };
 
-export default Signup;
+export default Login;
