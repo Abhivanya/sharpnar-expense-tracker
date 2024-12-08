@@ -35,7 +35,7 @@ const Login = () => {
         console.log(res);
         alert("SignIn Successfully");
         localStorage.setItem("token", res.idToken);
-        navigate("/");
+        navigate("/verifyEmail");
       })
       .catch((err) => {
         console.log(err);
