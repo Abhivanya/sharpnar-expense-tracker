@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 const Profile = () => {
   const nameRef = useRef();
@@ -33,6 +33,39 @@ const Profile = () => {
         alert(err.message);
       });
   };
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      alert("user not login");
+    }
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          idToken: localStorage.getItem("token"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.error) {
+          throw new Error(res.error);
+        }
+        console.log(res.users[0]);
+        if (res.users && res.users.length > 0) {
+          nameRef.current.value = res.users[0].displayName;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err.message);
+      });
+  }, [handleUpdate]);
+
   return (
     <form
       className="flex flex-col gap-4 items-center justify-center w-full"
