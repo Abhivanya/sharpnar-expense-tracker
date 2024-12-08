@@ -42,6 +42,35 @@ const Login = () => {
         alert(err.message);
       });
   };
+
+  const handleForget = () => {
+    const enterdEmail = prompt("Enter your email");
+    fetch(
+      "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          requestType: "PASSWORD_RESET",
+          email: enterdEmail,
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.err) {
+          throw new Error(res.error);
+        }
+
+        navigate("/resetPassword");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err.message);
+      });
+  };
   return (
     <div className={Style.container}>
       <form onSubmit={handleLogin}>
@@ -62,9 +91,14 @@ const Login = () => {
           />
         </div>
 
-        <button>Login </button>
-        <a href="#">Forget Password ?</a>
+        <button onClick={handleForget}>Login </button>
       </form>
+      <div
+        className="underline text-center cursor-pointer"
+        onClick={handleForget}
+      >
+        Forget Password ?
+      </div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import Profile from "./pages/Profile";
 import Welcome from "./pages/Welcome";
 import EmailVerification from "./pages/EmailVerification";
+import ResetPassword from "./pages/ResetPassword";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/verifyEmail" element={<EmailVerification />} />
+        <Route path="/resetPassword" element={<ResetPassword />} />
       </Routes>
     </>
   );
