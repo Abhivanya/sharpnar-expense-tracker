@@ -1,8 +1,11 @@
 import React, { useRef } from "react";
 import Style from "./Login.module.css";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
+
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -32,6 +35,7 @@ const Login = () => {
         console.log(res);
         alert("SignIn Successfully");
         localStorage.setItem("token", res.idToken);
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
