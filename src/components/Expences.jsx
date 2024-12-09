@@ -55,6 +55,31 @@ const Expences = () => {
       });
     e.target.reset();
   };
+
+  const handleDelete = (id) => {
+    fetch(
+      `https://wheatherapp-f9067-default-rtdb.firebaseio.com/expences/${id}.json`,
+      {
+        method: "DELETE",
+        headers: {
+          "contetn-type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((res) => {
+        console.log(res);
+        setRefetch(!refetch);
+        alert("Expense Deleted");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(err.message);
+      });
+  };
+
+  const handleUpdate = () => {};
+
   return (
     <div className="flex flex-col  w-[90%] mx-[auto] p-5 bg-yellow-100 rounded-md">
       <form
@@ -89,11 +114,25 @@ const Expences = () => {
           {Object.entries(expences).map(([key, expense]) => (
             <div
               key={key}
-              className="border-2 border-blue-400 p-3 rounded-md w-[200px] h-[150px] flex flex-col font-semibold"
+              className="border-2 border-blue-400 p-3 rounded-md w-[200px] h-[200px] overflow-y-auto overflow-x-hidden flex flex-col font-semibold"
             >
               <div>{expense.description}</div>
               <div>{expense.amount}</div>
               <div>{expense.category}</div>
+              <div className="self-end flex justify-between w-full  mt-4">
+                <button
+                  className="px-3 py-1 bg-yellow-300  rounded-md hover:bg-blue-500 "
+                  onClick={handleUpdate}
+                >
+                  Update
+                </button>
+                <button
+                  className="px-3 py-1 rounded-md hover:bg-blue-500  bg-red-500 "
+                  onClick={() => handleDelete(key)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
