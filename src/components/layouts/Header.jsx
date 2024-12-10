@@ -13,6 +13,9 @@ const Header = () => {
     <header className="flex w-full justify-between  items-center p-7 text-black">
       <div>Welcome to Expnese Tracker!</div>
       <div className="flex justify-evenly items-center gap-3">
+        <button className="text-yellow-500 border-2 border-yellow-500 rounded-md font-bold bg-black px-2 py-1 text-[16px]">
+          Activate Premium
+        </button>
         <div>
           Your Profile is Incomplete{" "}
           <NavLink

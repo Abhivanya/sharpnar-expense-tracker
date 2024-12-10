@@ -110,7 +110,10 @@ const Expences = () => {
         <h1 className="text-3xl text-blue-500 underline underline-offset-4 text-center font-bold">
           Expences
         </h1>
-        <div className="flex w-[99%] min-h-[400px] p-4 mt-4 bg-green-300 rounded-md gap-2 flex-wrap">
+        <div className="relative flex w-[99%] min-h-[400px] p-4 mt-4 bg-green-300 rounded-md gap-2 flex-wrap">
+          <button className="absolute top-8 right-8 border-2 border-blue-600 rounded-md px-3 py-1 font-bold bg-white text-blue-600">
+            Dwonload csv
+          </button>
           {Object.entries(expences).map(([key, expense]) => (
             <div
               key={key}
