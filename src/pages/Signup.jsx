@@ -1,9 +1,16 @@
 import React, { useRef } from "react";
 import Style from "./Signup.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { singupAction } from "../store/authActions";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  const dispatch = useDispatch();
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -11,33 +18,12 @@ const Signup = () => {
       alert("Password Did not match");
       return;
     }
-    fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => {
-        if (res.error) {
-          throw new Error(res.error.message);
-        } else {
-          console.log(res);
-          alert("SignUp Successfully");
-          localStorage.setItem("token", res.idToken);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err.message);
-      });
+    dispatch(
+      singupAction(emailRef.current.value, confirmPasswordRef.current.value)
+    );
+    if (isLoggedIn) {
+      navigate("/");
+    }
     e.target.reset();
   };
   return (

@@ -8,12 +8,13 @@ import Welcome from "./pages/Welcome";
 import EmailVerification from "./pages/EmailVerification";
 import ResetPassword from "./pages/ResetPassword";
 import Greeting from "./testing/Greeting";
+import { useSelector } from "react-redux";
 
 const App = () => {
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   return (
     <>
       <Header />
-      <Greeting />
       <Routes>
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<Login />} />

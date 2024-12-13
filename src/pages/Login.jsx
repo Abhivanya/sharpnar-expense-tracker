@@ -1,46 +1,23 @@
 import React, { useRef } from "react";
 import Style from "./Login.module.css";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginAction } from "../store/authActions";
 const Login = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const handleLogin = (e) => {
     e.preventDefault();
-
-    fetch(
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
-      {
-        method: "POST",
-        body: JSON.stringify({
-          email: emailRef.current.value,
-          password: passwordRef.current.value,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((res) => {
-        if (res.error) {
-          throw new Error(res.error.message);
-        }
-
-        console.log(res);
-        alert("SignIn Successfully");
-        localStorage.setItem("token", res.idToken);
-        navigate("/verifyEmail");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err.message);
-      });
+    dispatch(loginAction(emailRef.current.value, passwordRef.current.value));
+    console.log(isLoggedIn);
+    if (isLoggedIn) {
+      navigate("/");
+    }
   };
 
   const handleForget = () => {
@@ -91,7 +68,7 @@ const Login = () => {
           />
         </div>
 
-        <button onClick={handleForget}>Login </button>
+        <button onClick={handleLogin}>Login </button>
       </form>
       <div
         className="underline text-center cursor-pointer"

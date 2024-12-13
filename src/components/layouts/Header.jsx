@@ -1,13 +1,20 @@
 import React from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { logoutAction } from "../../store/authActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    dispatch(logoutAction());
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
   };
   return (
     <header className="flex w-full justify-between  items-center p-7 text-black">
