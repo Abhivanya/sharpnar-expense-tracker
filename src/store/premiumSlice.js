@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  isPremium: false,
   theme: "dark",
 };
 
@@ -13,6 +14,12 @@ const premiumSlice = createSlice({
     },
     dowonloadExpences() {
       alert("Dwonlaoding expences");
+    },
+    activatePremium(state) {
+      state.isPremium = true;
+    },
+    dactivatePremium(state) {
+      state.isPremium = false;
     },
   },
 });

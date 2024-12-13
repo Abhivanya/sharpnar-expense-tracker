@@ -7,18 +7,18 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 const Expenses = () => {
-  const [refetch, setRefetch] = useState(false);
   const amountRef = useRef();
   const desRef = useRef();
   const categoryRef = useRef();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchData());
-  }, [refetch]);
-
   const expenseItems = useSelector((state) => state.expense.expenses);
   const totalExpences = useSelector((state) => state.expense.totalExpenses);
+
+  useEffect(() => {
+    dispatch(fetchData());
+  }, []);
+  useEffect(() => {}, [expenseItems]);
 
   const addExpense = (e) => {
     e.preventDefault();
@@ -37,35 +37,31 @@ const Expenses = () => {
   };
 
   const handleUpdate = (id) => {
-    const updatedAmount = prompt("Enter new amount:");
-    const updatedDescription = prompt("Enter new description:");
-    const updatedCategory = prompt("Enter new category:");
-
-    if (updatedAmount && updatedDescription && updatedCategory) {
-      fetch(
-        `https://wheatherapp-f9067-default-rtdb.firebaseio.com/expenses/${id}.json`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            amount: updatedAmount,
-            description: updatedDescription,
-            category: updatedCategory,
-          }),
-        }
-      )
-        .then((response) => response.json())
-        .then(() => {
-          setRefetch(!refetch);
-          alert("Expense Updated");
-        })
-        .catch((err) => alert(err.message));
-    }
+    return;
+    fetch(
+      `https://wheatherapp-f9067-default-rtdb.firebaseio.com/expenses/${id}.json`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: updatedAmount,
+          description: updatedDescription,
+          category: updatedCategory,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then(() => {
+        alert("Expense Updated");
+      })
+      .catch((err) => alert(err.message));
   };
 
-  const handleDownloadCSV = () => {};
+  const handleDownloadCSV = () => {
+    alert("Added soon...");
+  };
 
   return (
     <div className="flex flex-col w-[90%] mx-auto p-5 bg-yellow-100 rounded-md">
