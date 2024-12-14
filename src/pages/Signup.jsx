@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import Style from "./Signup.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { singupAction } from "../store/authActions";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Signup = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -14,6 +14,14 @@ const Signup = () => {
 
   const handleSignup = (e) => {
     e.preventDefault();
+    // if (
+    //   !emailRef.current.value ||
+    //   !passwordRef.current.value ||
+    //   !confirmPasswordRef.current.value
+    // ) {
+    //   alert("Fill all details");
+    //   return;
+    // }
     if (passwordRef.current.value !== confirmPasswordRef.current.value) {
       alert("Password Did not match");
       return;
@@ -57,6 +65,9 @@ const Signup = () => {
           />
         </div>
         <button>Sign up</button>
+        <Link className="underline text-blue-400" to={"/login"}>
+          Already have Account ?
+        </Link>
       </form>
     </div>
   );

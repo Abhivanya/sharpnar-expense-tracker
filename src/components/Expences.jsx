@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import {
   addExpenseAction,
+  downloadeFileAction,
+  updateExpenseAction,
   fetchData,
   removeExpenseAction,
 } from "../store/expenseActions";
@@ -11,56 +13,58 @@ const Expenses = () => {
   const desRef = useRef();
   const categoryRef = useRef();
   const dispatch = useDispatch();
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [expenseId, setExpenseId] = useState();
 
   const expenseItems = useSelector((state) => state.expense.expenses);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const totalExpences = useSelector((state) => state.expense.totalExpenses);
+  const isPremiumUser = useSelector((state) => state.premium.isPremium);
 
   useEffect(() => {
     dispatch(fetchData());
-  }, []);
-  useEffect(() => {}, [expenseItems]);
-
-  const addExpense = (e) => {
-    e.preventDefault();
-    dispatch(
-      addExpenseAction(
-        amountRef.current.value,
-        desRef.current.value,
-        categoryRef.current.value
-      )
-    );
-    e.target.reset();
-  };
+  }, [isLoggedIn]);
 
   const handleDelete = (id) => {
     dispatch(removeExpenseAction(id));
   };
 
   const handleUpdate = (id) => {
-    return;
-    fetch(
-      `https://wheatherapp-f9067-default-rtdb.firebaseio.com/expenses/${id}.json`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: updatedAmount,
-          description: updatedDescription,
-          category: updatedCategory,
-        }),
-      }
-    )
-      .then((response) => response.json())
-      .then(() => {
-        alert("Expense Updated");
-      })
-      .catch((err) => alert(err.message));
+    setExpenseId(id);
+    setIsUpdate(true);
+    amountRef.current.value = expenseItems[id].amount;
+    desRef.current.value = expenseItems[id].description;
+    categoryRef.current.value = expenseItems[id].category;
+  };
+
+  const addExpense = (e) => {
+    e.preventDefault();
+    if (isUpdate) {
+      dispatch(
+        updateExpenseAction(
+          amountRef.current.value,
+          desRef.current.value,
+          categoryRef.current.value,
+          expenseId
+        )
+      );
+
+      setIsUpdate(false);
+      setExpenseId();
+    } else {
+      dispatch(
+        addExpenseAction(
+          amountRef.current.value,
+          desRef.current.value,
+          categoryRef.current.value
+        )
+      );
+    }
+    e.target.reset();
   };
 
   const handleDownloadCSV = () => {
-    alert("Added soon...");
+    dispatch(downloadeFileAction());
   };
 
   return (
@@ -86,7 +90,7 @@ const Expenses = () => {
           </select>
         </div>
         <button className="px-3 py-1 bg-blue-600 text-white h-8 rounded-md hover:bg-blue-300">
-          Add Expense
+          {isUpdate ? "Update Expense" : "Add Expense"}
         </button>
         <div>Total Expense : {totalExpences}</div>
       </form>
@@ -96,12 +100,14 @@ const Expenses = () => {
           Expenses
         </h1>
         <div className="relative flex w-[99%] min-h-[400px] p-4 mt-4 bg-green-300 rounded-md gap-2 flex-wrap">
-          <button
-            className="absolute top-8 right-8 border-2 border-blue-600 rounded-md px-3 py-1 font-bold bg-white text-blue-600"
-            onClick={handleDownloadCSV}
-          >
-            Download CSV
-          </button>
+          {isPremiumUser && (
+            <button
+              className="absolute top-8 right-8 border-2 border-blue-600 rounded-md px-3 py-1 font-bold bg-white text-blue-600"
+              onClick={handleDownloadCSV}
+            >
+              Download CSV
+            </button>
+          )}
 
           {expenseItems &&
             Object.entries(expenseItems).map(([key, expense]) => (

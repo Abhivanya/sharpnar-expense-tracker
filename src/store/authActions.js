@@ -1,6 +1,7 @@
 // login thunk
 
 import { authActions } from "./authSlice";
+import { expensesActions } from "./expenseSlice";
 export const loginAction = (email, password) => {
   return (dispatch) => {
     fetch(
@@ -27,7 +28,9 @@ export const loginAction = (email, password) => {
 
         alert("SignIn Successfully");
         localStorage.setItem("token", res.idToken);
-        dispatch(authActions.loggedIn({ token: res.idToken }));
+
+        localStorage.setItem("email", email);
+        dispatch(authActions.loggedIn({ token: res.idToken, email: email }));
       })
       .catch((err) => {
         console.log(err);
@@ -39,7 +42,9 @@ export const loginAction = (email, password) => {
 export const logoutAction = () => {
   return (dispatch) => {
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
     dispatch(authActions.logout());
+    dispatch(expensesActions.userLogout());
   };
 };
 
@@ -67,7 +72,8 @@ export const singupAction = (email, password) => {
           console.log(res);
           alert("SignUp Successfully");
           localStorage.setItem("token", res.idToken);
-          dispatch(authActions.signup({ token: res.idToken }));
+          localStorage.setItem("email", email);
+          dispatch(authActions.signup({ token: res.idToken, email: email }));
         }
       })
       .catch((err) => {

@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import Style from "./Login.module.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginAction } from "../store/authActions";
 const Login = () => {
@@ -13,6 +13,10 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    if (!emailRef.current.value || !passwordRef.current.value) {
+      alert("Fill all details");
+      return;
+    }
     dispatch(loginAction(emailRef.current.value, passwordRef.current.value));
     console.log(isLoggedIn);
     if (isLoggedIn) {
@@ -22,6 +26,7 @@ const Login = () => {
 
   const handleForget = () => {
     const enterdEmail = prompt("Enter your email");
+    if (!enterdEmail) return;
     fetch(
       "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDDTATv0YiM4tUTMW_am_sGPbArW4ZmUOk",
       {
@@ -40,8 +45,9 @@ const Login = () => {
         if (res.err) {
           throw new Error(res.error);
         }
+        console.log(res);
 
-        navigate("/resetPassword");
+        alert("Passwerd reset Link is set To your Email");
       })
       .catch((err) => {
         console.log(err);
@@ -69,6 +75,9 @@ const Login = () => {
         </div>
 
         <button onClick={handleLogin}>Login </button>
+        <Link className="underline text-blue-400" to={"/signup"}>
+          Create account ?
+        </Link>
       </form>
       <div
         className="underline text-center cursor-pointer"

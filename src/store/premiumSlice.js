@@ -10,15 +10,17 @@ const premiumSlice = createSlice({
   initialState: initialState,
   reducers: {
     toggleTheme(state) {
-      state.theme = state.theme === "dark" ? "white" : "dark";
+      state.theme = state.theme === "dark" ? "light" : "dark";
     },
     dowonloadExpences() {
       alert("Dwonlaoding expences");
     },
     activatePremium(state) {
       state.isPremium = true;
+      state.theme = "dark";
     },
     dactivatePremium(state) {
+      state.theme = "light";
       state.isPremium = false;
     },
   },

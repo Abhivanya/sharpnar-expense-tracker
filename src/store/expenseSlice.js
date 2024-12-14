@@ -28,7 +28,22 @@ const expenseSlice = createSlice({
         delete state.expenses[id];
       }
     },
-    updateExpense(state, action) {},
+    updateExpense(state, action) {
+      const id = action.payload.id;
+      if (state.expenses[id]) {
+        state.expenses[id] = {
+          ...state.expenses[id],
+          amount: action.payload.amount,
+          description: action.payload.description,
+          category: action.payload.category,
+        };
+      }
+    },
+
+    userLogout(state, action) {
+      state.expenses = {};
+      state.totalExpenses = 0;
+    },
   },
 });
 
